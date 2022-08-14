@@ -3,8 +3,8 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 const MODELS = [
-    '/models/cartoon_sports_car/scene.gltf', 
-    '/models/le_tonneau_tavern/scene.gltf'
+    `./models/cartoon_sports_car/scene.gltf`, 
+    `./models/le_tonneau_tavern/scene.gltf`
 ];
 
 //Camera setup
@@ -178,7 +178,6 @@ export function SwitchWireframeView(isWireframeView){
 }
 
 function CreateLightSourcesOnScene(){
-    console.warn ("LIGHTSS")
     for (const [, lightSrcData] of Object.entries(lightSourcesOnScene)) {
         let lightSource;
         switch (lightSrcData.type){
