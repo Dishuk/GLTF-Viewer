@@ -16,7 +16,13 @@ const MAX_DISTANCE_TO_MODEL = 15;
 const SCENE_SIZE = 10;
 const SCENE_BACKGROUND = 0xffffff;
 
-const WIREFRAME_COLOR = 0x000000;
+//Wireframe
+const WIREFRAME_MATERIAL = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.1
+});
 
 //Components
 const scene = new THREE.Scene();
@@ -26,6 +32,9 @@ const loader = new GLTFLoader();
 const cameraController = new OrbitControls(camera, renderer.domElement);
 const clock = new THREE.Clock();
 var animMixer;
+
+var textureMaterial = [];
+
 
 const MODELS = ['models/cartoon_sports_car/scene.gltf', 'models/le_tonneau_tavern/scene.gltf']
 
@@ -122,17 +131,16 @@ export function LoadModel(modelIndex, isWireframeView, vue){
 
         let normalizedScene = NormalizeScene(model.scene);
 
-        if  (isWireframeView){
-            normalizedScene.traverse((node) => {
-                if (!node.isMesh) return;
-                node.material = new THREE.MeshBasicMaterial({
-                    color: WIREFRAME_COLOR,
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.1
-                });
-            });   
-        } 
+        textureMaterial = {};
+
+        let index = 0;
+        normalizedScene.traverse((node) => {
+            if (!node.isMesh) return;
+
+            textureMaterial[index] = node.material;
+
+            index++;
+        });   
 
         currentModel = normalizedScene;
         animMixer = new THREE.AnimationMixer( normalizedScene );
@@ -142,6 +150,23 @@ export function LoadModel(modelIndex, isWireframeView, vue){
         scene.add(normalizedScene);
         vue.ShowLoadingIndicator (false);
     })
+}
+
+export function SwitchWireframeView(isWireframeView){
+
+    let index = 0;
+    currentModel.traverse((node) => {
+        if (!node.isMesh) return;
+            if  (isWireframeView){
+                node.material = WIREFRAME_MATERIAL;
+                node.material.needsUpdate = true;
+            } else{
+                node.material = textureMaterial[index];
+                node.material.needsUpdate = true;
+            }
+            index++;
+    }); 
+    
 }
 
 function UpdateCameraSettings(target, isWireframeView){

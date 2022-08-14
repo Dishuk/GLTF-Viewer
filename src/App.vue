@@ -11,8 +11,10 @@
             
 
             <div class="btnsContainer container">
-                <button @click="SwitchTextureOrWireframe(false)" class="pure-button">Texture</button>
-                <button @click="SwitchTextureOrWireframe(true)" class="pure-button">Wireframe</button>
+                <button @click="SwitchTextureOrWireframe(false)"
+                :class="{'pure-button':true, 'button-selected':!isWireframe}">Texture</button>
+                <button @click="SwitchTextureOrWireframe(true)"
+                :class="{'pure-button':true, 'button-selected':isWireframe}">Wireframe</button>
             </div>
             
             <div class="selectContainer container">
@@ -25,8 +27,10 @@
 
          <div class="ui_bl">
             <div class="btnsContainer container">
-                <button @click="SetModelIndex(0)" class="pure-button">Model 1</button>
-                <button @click="SetModelIndex(1)" class="pure-button">Model 2</button>
+                <button @click="SetModelIndex(0)"
+                :class="{'pure-button':true, 'button-selected':currentModel==0}">Model 1</button>
+                <button @click="SetModelIndex(1)"
+                :class="{'pure-button':true, 'button-selected':currentModel==1}">Model 2</button>
             </div>
         </div>
         <div ref="viewer" class="viewer"></div>
@@ -60,8 +64,11 @@
             },
 
             SwitchTextureOrWireframe(isWireframeView){
-                this.isWireframe = isWireframeView;
-                this.LoadModel();
+                if (!this.showLoadingIndicator){
+                    this.isWireframe = isWireframeView;
+
+                    GLTFViewer.SwitchWireframeView(isWireframeView);
+                }
             },
 
             SetModelIndex(modelIndex){
@@ -71,6 +78,7 @@
 
             LoadModel(){
                 this.$refs.idle.selected = true;
+                this.isWireframe = false;
                 GLTFViewer.LoadModel(this.currentModel, this.isWireframe, this);
             },
 
