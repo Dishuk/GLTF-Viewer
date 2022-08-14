@@ -86,7 +86,6 @@
             },
 
             PlayAnimation(event){
-                console.warn ();
                 let animationIndex = parseInt(event.target.value);
                 if (isNaN (animationIndex)){
                      console.error(new Error(`${event.target.value} is not a number!`));
