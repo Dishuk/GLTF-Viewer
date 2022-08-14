@@ -1,0 +1,165 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    font-size: 12px;
+    color:rgb(102, 102, 102);
+}
+
+ul[class],
+ol[class] {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p
+{
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+.ui_tl{
+    position: fixed;
+    top: 0;
+    left:0;
+    padding:10px;
+}
+
+.ui_bl{
+    position: fixed;
+    bottom: 0;
+    left:0;
+    padding:10px;
+}
+
+.loadingIndicator{
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+
+/*#region Loading indicator*/
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: rgb(80, 80, 80);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(24px, 0);
+    }
+  }
+  /*#endregion Loading indicator*/
+
+  
+  select {
+    outline: 0;
+    border: 0;
+    box-shadow: none;
+    padding: 0 1em;
+    cursor: pointer;
+    background: #e6e6e6;
+  }
+
+  button{
+    height:30px;
+    background: #e6e6e6;
+    display: block;
+    width: 170px;
+    color:rgb(102, 102, 102) !important;
+  }
+
+  .container{
+    padding:2px;
+    margin-top: 2px;
+  }
+
+  .modelNameContainer{
+    display:table;
+  }
+  .modelNameContainer span{
+    display:table-cell;
+    vertical-align:middle;
+    height:30px;
+    font-size: 16px;
+  }
+
+  .btnsContainer button{
+    margin-right: 5px;
+    height:30px;
+  }
+
+  .selectContainer select{
+    height:30px;
+    width:170px;
+  }
