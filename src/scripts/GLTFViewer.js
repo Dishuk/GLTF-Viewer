@@ -2,9 +2,11 @@ import * as THREE from 'three'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
+const modelsPath = process.env.NODE_ENV === 'production'? '/GLTF-Viewer/': '';
+
 const MODELS = [
-    `./models/cartoon_sports_car/scene.gltf`, 
-    `./models/le_tonneau_tavern/scene.gltf`
+    `${modelsPath}/models/cartoon_sports_car/scene.gltf`, 
+    `${modelsPath}/models/le_tonneau_tavern/scene.gltf`
 ];
 
 //Camera setup
@@ -129,7 +131,6 @@ export function LoadModel(modelIndex, vue){
     }
 
     loader.load(MODELS[modelIndex], (model) => {
-        
         let modelName = model?.asset?.extras?.title || "Unnamed model";
         availableAnimations = model.animations;
         vue.UpdateModelInfo(availableAnimations, modelName);
@@ -153,11 +154,22 @@ export function LoadModel(modelIndex, vue){
 
         UpdateCameraSettings(normalizedScene);
         vue.ShowLoadingIndicator (false);
-    })
+    },() => {},
+	function ( error ) {
+		console.error( `An error happened: ${error}` );
+        return;
+	});
+}
+
+function GetSceneSize(scene){
+    let box3 = new THREE.Box3().setFromObject( scene );
+    let size = new THREE.Vector3();
+    return box3.getSize(size);
 }
 
 function UpdateCameraSettings(target){
-    cameraController.target = target.position;
+    let cameraHeight = GetSceneSize(target).y/2;
+    cameraController.target = new THREE.Vector3 (target.position.x, cameraHeight, target.position.z);
     camera.position.set(SCENE_SIZE,SCENE_SIZE/2,SCENE_SIZE);
     camera.position.normalize().multiplyScalar(INITIAL_DISTANCE_TO_MODEL);
 }
@@ -201,14 +213,13 @@ function CameraController(){
 }
 
 function NormalizeScene(scene){
-    let box3 = new THREE.Box3().setFromObject( scene );
-    let size = new THREE.Vector3();
-    let modelSize = box3.getSize(size);
+
+    let sceneSize = GetSceneSize(scene);
 
     let calculation = {
-        x: SCENE_SIZE/modelSize.x,
-        y: SCENE_SIZE/modelSize.y,
-        z: SCENE_SIZE/modelSize.z,
+        x: SCENE_SIZE/sceneSize.x,
+        y: SCENE_SIZE/sceneSize.y,
+        z: SCENE_SIZE/sceneSize.z,
     }
     
     let diff;
