@@ -1,7 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 
 module.exports = defineConfig({
-    publicPath: '/docs/',
+    publicPath: '/GLTF-Viewer/docs/',
     assetsDir: './',
     outputDir: './docs',
     transpileDependencies: true,
