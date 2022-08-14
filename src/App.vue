@@ -109,6 +109,6 @@
 </script>
 
 <style>
-    @import './css/styles.css';
+    @import '@/css/styles.css';
     @import 'purecss/build/pure.css';
 </style>
