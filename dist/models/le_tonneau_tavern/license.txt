@@ -1,0 +1,11 @@
+Model Information:
+* title:	Le Tonneau Tavern
+* source:	https://sketchfab.com/3d-models/le-tonneau-tavern-c5d10210bd644c2c85e15e9bb219ef4c
+* author:	Batuhan13 (https://sketchfab.com/Batuhan13)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Le Tonneau Tavern" (https://sketchfab.com/3d-models/le-tonneau-tavern-c5d10210bd644c2c85e15e9bb219ef4c) by Batuhan13 (https://sketchfab.com/Batuhan13) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
