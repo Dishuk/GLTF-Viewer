@@ -139,9 +139,14 @@ select {
     color:rgb(102, 102, 102) !important;
   }
 
+  .button-selected{
+    background: rgb(117, 189, 211) !important;
+  }
+
   .container{
     padding:2px;
     margin-top: 2px;
+    width:100%;
   }
 
   .modelNameContainer{
@@ -162,4 +167,4 @@ select {
   .selectContainer select{
     height:30px;
     width:170px;
-  }
+  } 
