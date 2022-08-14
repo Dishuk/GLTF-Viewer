@@ -8,7 +8,6 @@
             <div class="modelNameContainer container">
                 <span>Model name: {{modelName}}</span>
             </div>
-            
 
             <div class="btnsContainer container">
                 <button @click="SwitchTextureOrWireframe(false)"
@@ -33,6 +32,7 @@
                 :class="{'pure-button':true, 'button-selected':currentModel==1}">Model 2</button>
             </div>
         </div>
+
         <div ref="viewer" class="viewer"></div>
     </div>
 </template>
@@ -72,14 +72,17 @@
             },
 
             SetModelIndex(modelIndex){
-                this.currentModel = modelIndex;
-                this.LoadModel();
+                if (!this.showLoadingIndicator){
+                    this.currentModel = modelIndex;
+                    this.LoadModel();
+                }
             },
 
             LoadModel(){
                 this.$refs.idle.selected = true;
                 this.isWireframe = false;
-                GLTFViewer.LoadModel(this.currentModel, this.isWireframe, this);
+
+                GLTFViewer.LoadModel(this.currentModel, this);
             },
 
             PlayAnimation(event){
@@ -106,6 +109,6 @@
 </script>
 
 <style>
-    @import '@/css/styles.css';
+    @import './css/styles.css';
     @import 'purecss/build/pure.css';
 </style>

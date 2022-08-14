@@ -2,17 +2,20 @@ import * as THREE from 'three'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
+const MODELS = [
+    '../models/cartoon_sports_car/scene.gltf', 
+    '../models/le_tonneau_tavern/scene.gltf'
+];
+
 //Camera setup
 const FOV = 80;
 const NEAR_PLANE = 0.01;
 const FAR_PLANE = 1000;
-
-//Scene setup
 const INITIAL_DISTANCE_TO_MODEL = 8;
 const MIN_DISTANCE_TO_MODEL = 6;
-const MIN_DISTANCE_TO_WIREFRAME_MODEL = 2;
 const MAX_DISTANCE_TO_MODEL = 15;
 
+//Scene setup
 const SCENE_SIZE = 10;
 const SCENE_BACKGROUND = 0xffffff;
 
@@ -25,22 +28,21 @@ const WIREFRAME_MATERIAL = new THREE.MeshBasicMaterial({
 });
 
 //Components
-const scene = new THREE.Scene();
-const renderer = new THREE.WebGLRenderer({antialias:true});
 const camera = new THREE.PerspectiveCamera(FOV, window.innerWidth/window.innerHeight , NEAR_PLANE, FAR_PLANE);
-const loader = new GLTFLoader();
+const renderer = new THREE.WebGLRenderer({antialias:true});
 const cameraController = new OrbitControls(camera, renderer.domElement);
+const scene = new THREE.Scene();
 const clock = new THREE.Clock();
+const loader = new GLTFLoader();
+
 var animMixer;
-
-var textureMaterial = [];
-
-
-const MODELS = ['models/cartoon_sports_car/scene.gltf', 'models/le_tonneau_tavern/scene.gltf']
-
 var currentModel;
 var availableAnimations = [];
+var textureMaterial = [];
 
+var isSceneInitialised = false;
+
+//Light settings
 const LIGHT_SRC_TYPE = {
     AmbientLight: 'ambientLight',
     PointLight: 'pointLight'
@@ -92,17 +94,21 @@ const lightSourcesOnScene = {
 
 
 export function Init(viewerElement){
-    scene.background = new THREE.Color(SCENE_BACKGROUND);
+    if  (!isSceneInitialised){
+        scene.background = new THREE.Color(SCENE_BACKGROUND);
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    
+        viewerElement.appendChild(renderer.domElement);
+    
+        window.addEventListener("resize", OnResizeWindow);
+    
+        Animation();
+        CreateLightSourcesOnScene();
+        CameraController();
 
-    viewerElement.appendChild(renderer.domElement);
-
-    window.addEventListener("resize", OnResizeWindow);
-
-    Animation();
-    CreateLightSourcesOnScene();
-    CameraController();
+        isSceneInitialised = true;
+    }
 }
 
 export function PlayAnimation(animationIndex){
@@ -115,45 +121,48 @@ export function PlayAnimation(animationIndex){
     } 
 }
 
-export function LoadModel(modelIndex, isWireframeView, vue){
+export function LoadModel(modelIndex, vue){
+    vue.ShowLoadingIndicator (true);
+
     if (currentModel){
         scene.remove(currentModel);
     }
-
-    vue.ShowLoadingIndicator (true);
 
     loader.load(MODELS[modelIndex], (model) => {
         
         let modelName = model?.asset?.extras?.title || "Unnamed model";
         availableAnimations = model.animations;
-
-        vue.UpdateModelInfo(model.animations, modelName);
+        vue.UpdateModelInfo(availableAnimations, modelName);
 
         let normalizedScene = NormalizeScene(model.scene);
-
-        textureMaterial = {};
-
+        
         let index = 0;
+        textureMaterial = {};
         normalizedScene.traverse((node) => {
-            if (!node.isMesh) return;
-
+            if (!node.isMesh) {
+                return;
+            }
             textureMaterial[index] = node.material;
-
             index++;
         });   
-
-        currentModel = normalizedScene;
+        
         animMixer = new THREE.AnimationMixer( normalizedScene );
-
-        UpdateCameraSettings(normalizedScene, isWireframeView);
+        currentModel = normalizedScene;
 
         scene.add(normalizedScene);
+
+        UpdateCameraSettings(normalizedScene);
         vue.ShowLoadingIndicator (false);
     })
 }
 
-export function SwitchWireframeView(isWireframeView){
+function UpdateCameraSettings(target){
+    cameraController.target = target.position;
+    camera.position.set(SCENE_SIZE,SCENE_SIZE/2,SCENE_SIZE);
+    camera.position.normalize().multiplyScalar(INITIAL_DISTANCE_TO_MODEL);
+}
 
+export function SwitchWireframeView(isWireframeView){
     let index = 0;
     currentModel.traverse((node) => {
         if (!node.isMesh) return;
@@ -166,21 +175,10 @@ export function SwitchWireframeView(isWireframeView){
             }
             index++;
     }); 
-    
-}
-
-function UpdateCameraSettings(target, isWireframeView){
-    if  (isWireframeView){
-        cameraController.minDistance = MIN_DISTANCE_TO_WIREFRAME_MODEL;
-    } else{
-        cameraController.minDistance = MIN_DISTANCE_TO_MODEL;
-    }
-
-    cameraController.target = target.position;
-    camera.position.normalize().multiplyScalar(INITIAL_DISTANCE_TO_MODEL);
 }
 
 function CreateLightSourcesOnScene(){
+    console.warn ("LIGHTSS")
     for (const [, lightSrcData] of Object.entries(lightSourcesOnScene)) {
         let lightSource;
         switch (lightSrcData.type){
