@@ -1,7 +1,5 @@
 # GLTF-Viewer
 
-https://dishuk.github.io/GLTF-Viewer/
-
 ## Project setup
 ```
 npm install
